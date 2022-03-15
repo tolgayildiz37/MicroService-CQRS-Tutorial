@@ -1,0 +1,37 @@
+version: '3.4'
+
+services:
+  sourcingdb:
+    image: mongo
+
+  rabbitmq:
+    image: rabbitmq:3-management
+
+  sourcingsqldb:
+    image: mcr.microsoft.com/mssql/server
+
+  tutorial.products:
+    image: ${DOCKER_REGISTRY-}tutorialproducts
+    build:
+      context: .
+      dockerfile: Tutorial.Products/Dockerfile
+
+  tutorial.sourcing:
+    image: ${DOCKER_REGISTRY-}tutorialsourcing
+    build:
+      context: .
+      dockerfile: Tutorial.Sourcing/Dockerfile
+
+  tutorial.orders:
+    image: ${DOCKER_REGISTRY-}tutorialorders
+    build:
+      context: .
+      dockerfile: Tutorial.Orders/Dockerfile
+
+
+  tutorial.apigateway:
+    image: ${DOCKER_REGISTRY-}tutorialapigateway
+    build:
+      context: .
+      dockerfile: Tutorial.APIGateway/Dockerfile
+
