@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -8,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Tutorial.Core.Entities;
+using Tutorial.Infrastructure.Data;
 
 namespace Tutorial.UI
 {
@@ -23,6 +27,16 @@ namespace Tutorial.UI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            #region DatabaseConnection
+            services.AddDbContext<WebAppContext>(options => 
+            options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
+
+            //Microsoft Identity
+            services.AddIdentity<AppUser, IdentityRole>()
+                .AddDefaultTokenProviders()
+                .AddEntityFrameworkStores<WebAppContext>();
+            #endregion
+
             #region Manually Added - MVC
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddMvc();
@@ -59,7 +73,7 @@ namespace Tutorial.UI
                             name: "default",
                             pattern: "{controller=Home}/{action=Index}/{id?}");
                     endpoints.MapRazorPages();
-                }); 
+                });
             #endregion
         }
     }
